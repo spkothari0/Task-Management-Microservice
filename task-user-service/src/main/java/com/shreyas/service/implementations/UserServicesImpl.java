@@ -2,6 +2,7 @@ package com.shreyas.service.implementations;
 
 import com.shreyas.AppConstant;
 import com.shreyas.Utility.GenericBeanMapper;
+
 import com.shreyas.bean.UserBean;
 import com.shreyas.entity.Constants.RoleType;
 import com.shreyas.entity.Role;
@@ -9,7 +10,6 @@ import com.shreyas.entity.User;
 import com.shreyas.filter.jwt.JwtUtils;
 import com.shreyas.repository.interfaces.IRoleRepo;
 import com.shreyas.repository.interfaces.IUserRepo;
-import com.shreyas.service.Constants;
 import com.shreyas.service.interfaces.IUserServices;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Date;
+import org.modelmapper.ModelMapper;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,15 +31,15 @@ public class UserServicesImpl implements UserDetailsService, IUserServices {
     private final IRoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
-    private final AppConstant appConstant;
+    private final ModelMapper mapper;
 
     @Autowired
-    public UserServicesImpl(IUserRepo userRepo, IRoleRepo roleRepo, PasswordEncoder passwordEncoder, JwtUtils jwtUtils, AppConstant appConstant) {
+    public UserServicesImpl(IUserRepo userRepo, IRoleRepo roleRepo, PasswordEncoder passwordEncoder, JwtUtils jwtUtils, ModelMapper modelMapper) {
         this.userRepo = userRepo;
         this.roleRepo = roleRepo;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
-        this.appConstant = appConstant;
+        this.mapper = modelMapper;
     }
 
     @Override
@@ -50,14 +49,6 @@ public class UserServicesImpl implements UserDetailsService, IUserServices {
             throw new UsernameNotFoundException("User with username: " + username + " not found!");
         }
         return u.get();
-    }
-
-    public UserBean loadUserByEmail(String email) throws UsernameNotFoundException {
-        Optional<User> u = userRepo.findByEmail(email);
-        if (u.isEmpty()) {
-            throw new UsernameNotFoundException(email);
-        }
-        return GenericBeanMapper.map(u, UserBean.class);
     }
 
     public UserBean createUser(UserBean userBean) {
@@ -90,12 +81,12 @@ public class UserServicesImpl implements UserDetailsService, IUserServices {
             throw new UsernameNotFoundException("Invalid token");
         }
         User u = userRepo.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return GenericBeanMapper.map(u, UserBean.class);
+        return GenericBeanMapper.map(u, UserBean.class, mapper);
     }
 
     public List<UserBean> getAllUsers() {
         List<User> users = userRepo.findAll();
-        return GenericBeanMapper.mapList(users, UserBean.class);
+        return GenericBeanMapper.mapList(users, UserBean.class, mapper);
     }
 
 //    public String verifyUser(String token) {
@@ -140,7 +131,7 @@ public class UserServicesImpl implements UserDetailsService, IUserServices {
 
     private UserBean saveUser(UserBean userBean) {
 
-        User user = GenericBeanMapper.map(userBean, User.class);
+        User user = GenericBeanMapper.map(userBean, User.class, mapper);
 
 //        sendVerificationMail(user);
 
@@ -152,7 +143,7 @@ public class UserServicesImpl implements UserDetailsService, IUserServices {
         user.setRole(role);
 
         user = userRepo.save(user);
-        return GenericBeanMapper.map(user, UserBean.class);
+        return GenericBeanMapper.map(user, UserBean.class, mapper);
     }
 
 //    private void sendVerificationMail(User user) {

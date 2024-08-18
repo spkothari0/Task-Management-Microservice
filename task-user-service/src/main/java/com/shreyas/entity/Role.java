@@ -21,4 +21,9 @@ public class Role {
 
     @NotNull
     private Boolean isEnabled;
+
+    @Override
+    public String toString() {
+        return roleName.name();
+    }
 }

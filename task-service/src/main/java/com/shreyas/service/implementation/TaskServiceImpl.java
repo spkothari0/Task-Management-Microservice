@@ -35,7 +35,7 @@ public class TaskServiceImpl implements TaskService {
 
 
         Task newTask = GenericBeanMapper.map(task, Task.class, mapper);
-        newTask.setStatus(TaskStatus.PENDING);
+        newTask.setStatus(TaskStatus.PENDING.name());
         newTask.setCreatedAt(LocalDateTime.now());
         newTask.setCreatedBy(author);
         newTask.setModifiedBy(author);
@@ -63,7 +63,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskBean> getAllTasks(TaskStatus status) throws Exception {
         List<Task> tasks = taskRepo.findAll();
-        tasks = tasks.stream().filter(x -> status == null || x.getStatus().name().equalsIgnoreCase(status.name())).toList();
+        tasks = tasks.stream().filter(x -> status == null || x.getStatus().equalsIgnoreCase(status.name())).toList();
         return GenericBeanMapper.mapList(tasks, TaskBean.class, mapper);
     }
 
@@ -93,7 +93,7 @@ public class TaskServiceImpl implements TaskService {
         if(task.getAssignedUserId()!=null)
             t.setAssignedUserId(task.getAssignedUserId());
         if (task.getStatus()!= null)
-            t.setStatus(task.getStatus());
+            t.setStatus(task.getStatus().name());
 
         t = taskRepo.save(t);
         return GenericBeanMapper.map(t, TaskBean.class, mapper);
@@ -119,7 +119,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskBean assignTaskToUser(UUID userId, UUID taskId) throws Exception {
         Task t = getTask_ById(taskId);
         t.setAssignedUserId(userId);
-        t.setStatus(TaskStatus.IN_PROGRESS);
+        t.setStatus(TaskStatus.IN_PROGRESS.name());
         t = taskRepo.save(t);
         return GenericBeanMapper.map(t, TaskBean.class, mapper);
     }
@@ -133,7 +133,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskBean> assignedUserTasks(UUID userId, TaskStatus status) throws Exception {
         List<Task> taskList = taskRepo.findByAssignedUserId(userId);
-        taskList = taskList.stream().filter(x -> status == null || x.getStatus().name().equalsIgnoreCase(status.name())).toList();
+        taskList = taskList.stream().filter(x -> status == null || x.getStatus().equalsIgnoreCase(status.name())).toList();
         return GenericBeanMapper.mapList(taskList, TaskBean.class, mapper);
     }
 
@@ -144,7 +144,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskBean completeTask(UUID taskId) throws Exception {
         Task t = getTask_ById(taskId);
-        t.setStatus(TaskStatus.COMPLETED);
+        t.setStatus(TaskStatus.COMPLETED.name());
         t.setModifiedBy(t.getAssignedUserId());
         t = taskRepo.save(t);
         return GenericBeanMapper.map(t, TaskBean.class, mapper);
@@ -157,7 +157,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskBean cancelTask(UUID taskId) throws Exception {
         Task t = getTask_ById(taskId);
-        t.setStatus(TaskStatus.CANCELLED);
+        t.setStatus(TaskStatus.CANCELLED.name());
         t.setModifiedBy(t.getAssignedUserId());
         t = taskRepo.save(t);
         return GenericBeanMapper.map(t, TaskBean.class, mapper);

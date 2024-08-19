@@ -1,9 +1,6 @@
 package com.shreyas.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,20 +19,23 @@ import java.util.UUID;
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @NotNull(message = "Task ID must not be null")
     private UUID id;
-
     private String title;
     private String description;
     private String imageURL;
-    @NotNull
+    @NotNull(message = "created by cannot be null")
     private UUID createdBy;
     private UUID modifiedBy;
-    @NotNull
+    @NotNull(message = "modified by cannot be null")
     private UUID assignedUserId;
-    @NotNull
-    private TaskStatus status;
-    private List<String> tags = new ArrayList<>();
+    @NotNull(message = "Status can not be null")
+    private String status;
+    @ElementCollection
+    @CollectionTable(name = "task_tags", joinColumns = @JoinColumn(name = "task_id"))
+    @Column(name = "tag")
+    private List<String> tags;
     private LocalDateTime deadLine;
-    @NotNull
+    @NotNull(message = "Created at can not be null")
     private LocalDateTime createdAt=LocalDateTime.now();
 }

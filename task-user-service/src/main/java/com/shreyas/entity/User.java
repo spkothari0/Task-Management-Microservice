@@ -47,7 +47,7 @@ public class User implements UserDetails {
     private String username;
 
     @NotNull
-    @OneToOne()
+    @ManyToOne()
     @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "FK_USER_ROLE"))
     private Role role;
 

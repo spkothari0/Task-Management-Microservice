@@ -2,12 +2,11 @@ package com.shreyas.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shreyas.bean.TaskBean;
-import com.shreyas.bean.UserBean;
+import com.shreyas.bean.UserDto;
 import com.shreyas.entity.TaskStatus;
 import com.shreyas.service.interfaces.TaskService;
 import com.shreyas.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +34,7 @@ public class TaskController extends BaseController {
     )
     public ResponseEntity<APIResponse<TaskBean>> createTask(@RequestBody TaskBean task, @RequestHeader("Authorization") String token) throws Exception {
         Object userResponse = userService.getUser(token);
-        APIResponse<UserBean> user = getUserConverted(userResponse);
+        APIResponse<UserDto> user = getUserConverted(userResponse);
         if (user.getStatusCode() != 200) {
             throw new IllegalStateException("Invalid user token");
         }
@@ -62,7 +61,7 @@ public class TaskController extends BaseController {
     @Operation(summary = "Update the task for the authenticated user.")
     public ResponseEntity<APIResponse<TaskBean>> updateTask(@PathVariable UUID id, @RequestBody TaskBean task, @RequestHeader("Authorization") String token) throws Exception {
         Object userResponse = userService.getUser(token);
-        APIResponse<UserBean> user = getUserConverted(userResponse);
+        APIResponse<UserDto> user = getUserConverted(userResponse);
         if (user.getStatusCode() != 200) {
             throw new IllegalStateException("Invalid user token");
         }
@@ -88,7 +87,7 @@ public class TaskController extends BaseController {
     @Operation(summary = "Get the task associated with the given user.")
     public ResponseEntity<APIResponse<List<TaskBean>>> getAssignedUserTasks(@RequestParam(required = false) TaskStatus status, @RequestHeader("Authorization") String token) throws Exception {
         Object userResponse = userService.getUser(token);
-        APIResponse<UserBean> user = getUserConverted(userResponse);
+        APIResponse<UserDto> user = getUserConverted(userResponse);
         if (user.getStatusCode() != 200) {
             throw new IllegalStateException("Invalid user token");
         }
@@ -110,12 +109,12 @@ public class TaskController extends BaseController {
         return SuccessResponse(result);
     }
 
-    private APIResponse<UserBean> getUserConverted(Object user) {
-        APIResponse<UserBean> apiResponse;
+    private APIResponse<UserDto> getUserConverted(Object user) {
+        APIResponse<UserDto> apiResponse;
         try {
-            apiResponse = objectMapper.convertValue(user, objectMapper.getTypeFactory().constructParametricType(APIResponse.class, UserBean.class));
+            apiResponse = objectMapper.convertValue(user, objectMapper.getTypeFactory().constructParametricType(APIResponse.class, UserDto.class));
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Failed to convert response to APIResponse<UserBean>", e);
+            throw new RuntimeException("Failed to convert response to APIResponse<UserDto>", e);
         }
         return apiResponse;
     }

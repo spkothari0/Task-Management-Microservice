@@ -1,0 +1,12 @@
+.tags{
+    color: #c24dd0;
+    border: 2px solid #c24dd0;
+    padding: 0.5rem 2rem;
+    border-radius: 5px;
+}
+
+.tags:hover{
+    background-image: linear-gradient(150deg, #c24dd0, #7a72fa);
+    color: white;
+    cursor: pointer;
+}

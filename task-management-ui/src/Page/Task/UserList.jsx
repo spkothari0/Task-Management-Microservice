@@ -29,9 +29,6 @@ export default function UserList({ handleClose, open }) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            User List
-          </Typography>
           {
             users.map((item,index) =>
               <>

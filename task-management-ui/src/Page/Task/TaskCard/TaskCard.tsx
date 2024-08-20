@@ -40,7 +40,6 @@ export default function TaskCard() {
     const handleOpenSubmissionList = () => {
         setOpenSubmissionList(true);
         handleMenuClose();
-        console.log("Open Submission List");
     }
     
 
@@ -48,19 +47,15 @@ export default function TaskCard() {
     const handleCloseUpdateTask = () => {
         handleMenuClose();
         setOpenUpdateTask(false);
-        console.log("Close Update Task");
     }
     const handleOpenUpdateTask = () => {
         setOpenUpdateTask(true);
         handleMenuClose();
-        console.log("Open Update Task");
     }
-
-    
 
     const handleDeleteTask = () => {
         handleMenuClose();
-        console.log("Delete Task");
+        // console.log("Delete Task");
     }
 
     return (

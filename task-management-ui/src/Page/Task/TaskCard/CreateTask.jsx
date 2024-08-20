@@ -14,7 +14,7 @@ const style = {
     transform: 'translate(-50%, -50%)',
     width: 400,
     bgcolor: 'background.paper',
-    border: '2px solid #000',
+    outline : 'none',
     boxShadow: 24,
     p: 4,
 };
@@ -22,7 +22,7 @@ const style = {
 const allTags = ["Angular", "React", "Spring Boot", "SQL", "JavaScript", "TypeScript", "NodeJS", "ExpressJS", "MongoDB", "PostgreSQL", "MySQL", "HTML", "CSS", "SCSS", "SASS", "Bootstrap", "Material UI", "Tailwind CSS", "Selenium", "Docker", "Kubernetes", "Jenkins", "Git", "GitHub", "GitLab", "AWS", "Azure", "GCP", "Heroku", "Netlify", "Vercel", "Firebase", "OAuth", "JWT", "NestJS", "Python", "Flask", "Ruby", "Ruby on Rails", "Java", "C", "C++", "C#", "PHP", "WordPress", "Shopify"];
 
 
-export default function EditTaskCard({ handleClose, open }) {
+export default function CreateTask({ handleClose, open }) {
 
     const [formData, setFormData] = React.useState({
         title: "",
@@ -84,8 +84,8 @@ export default function EditTaskCard({ handleClose, open }) {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                <Typography className='text-center pb-5 text-bold' id="create-task" variant="h6" component="h2">
-                        Edit Task
+                    <Typography className='text-center pb-5 text-bold' id="create-task" variant="h6" component="h2">
+                        Create Task
                     </Typography>
                     <form>
                         <Grid container spacing={2} alighItems="center">
@@ -134,7 +134,7 @@ export default function EditTaskCard({ handleClose, open }) {
                             <Grid item xs={12}>
                                 <Button onClick={handleSubmit} className="customButton" type='submit'
                                     fullWidth variant='contained' sx={{ padding: '.9rem' }}>
-                                    Update Task
+                                    Create Task
                                 </Button>
                             </Grid>
                         </Grid>

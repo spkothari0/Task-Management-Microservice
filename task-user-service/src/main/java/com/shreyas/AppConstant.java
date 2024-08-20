@@ -11,6 +11,9 @@ public class AppConstant {
         this.environment = environment;
     }
 
+    public static String AUTHORIZATION_KEY = "Authorization";
+    public static String CORRELATION_ID_KEY = "Correlation-Id";
+
     public boolean RunStartupFile() {
         return Boolean.parseBoolean(environment.getProperty("SPRING_APP_RUN_STARTUP_FILE"));
     }

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(value = "/api/v1/submission", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1/submissions", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "*")
 public class SubmissionController extends BaseController{
 
@@ -40,7 +40,7 @@ public class SubmissionController extends BaseController{
         return SuccessResponse(submission);
     }
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "")
     public ResponseEntity<APIResponse<List<Submission>>> getAllTaskSubmissions() {
         List<Submission> submissions = submissionService.getAllTaskSubmissions();
         return SuccessResponse(submissions);

@@ -18,7 +18,7 @@ spring:
         - id: SUBMISSION-SERVICE
           uri: lb://SUBMISSION-SERVICE
           predicates:
-            - Path=/api/v1/submission/**
+            - Path=/api/v1/submissions/**
 
 
       default-filters:

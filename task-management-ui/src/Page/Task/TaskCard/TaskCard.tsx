@@ -2,11 +2,13 @@ import React from 'react'
 import './TaskCard.css'
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import UserList from '../UserList';
+import SubmissionList from '../SubmissionList';
+import EditTaskCard from './EditTaskCard';
 
 const role="ROLE_ADMIN";
 
-const TaskCard = () => {
-
+export default function TaskCard() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const openMenu = Boolean(anchorEl);
     const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -16,19 +18,48 @@ const TaskCard = () => {
         setAnchorEl(null);
     };
 
+
+    const [openUserList, setOpenUserList] = React.useState(false);
+    const handleCloseUserList = () => {
+        handleMenuClose();
+        setOpenUserList(false);
+        console.log("Close UserList");
+    }
     const handleOpenUserList = () => {
+        setOpenUserList(true);
+        handleMenuClose();
         console.log("Open User List");
     }
 
+    const [openSubmissionList, setOpenSubmissionList] = React.useState(false);
+    const handleCloseSubmissionList = () => {
+        handleMenuClose();
+        setOpenSubmissionList(false);
+        console.log("Close SubmissionList");
+    }
     const handleOpenSubmissionList = () => {
+        setOpenSubmissionList(true);
+        handleMenuClose();
         console.log("Open Submission List");
     }
+    
 
+    const [openUpdateTask, setOpenUpdateTask] = React.useState(false);
+    const handleCloseUpdateTask = () => {
+        handleMenuClose();
+        setOpenUpdateTask(false);
+        console.log("Close Update Task");
+    }
     const handleOpenUpdateTask = () => {
+        setOpenUpdateTask(true);
+        handleMenuClose();
         console.log("Open Update Task");
     }
 
+    
+
     const handleDeleteTask = () => {
+        handleMenuClose();
         console.log("Delete Task");
     }
 
@@ -88,15 +119,12 @@ const TaskCard = () => {
                             
                             </>
                         )}
-
-                        
-                        
                     </Menu>
-
                 </div>
             </div>
+            <UserList handleClose={handleCloseUserList} open={openUserList} />
+            <SubmissionList handleClose={handleCloseSubmissionList} open={openSubmissionList} />
+            <EditTaskCard handleClose={handleCloseUpdateTask} open={openUpdateTask} />
         </div>
     )
 }
-
-export default TaskCard;

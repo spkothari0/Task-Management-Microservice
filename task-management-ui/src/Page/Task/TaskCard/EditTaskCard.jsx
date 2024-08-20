@@ -1,11 +1,10 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 
 const style = {
-  position: 'absolute' as 'absolute',
+  position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
@@ -16,7 +15,7 @@ const style = {
   p: 4,
 };
 
-export default function UserList({handleClose, open}: any) {
+export default function EditTaskCard({handleClose, open}) {
 
   return (
     <div>
@@ -28,11 +27,9 @@ export default function UserList({handleClose, open}: any) {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
+            Edit Task Form
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
+          
         </Box>
       </Modal>
     </div>

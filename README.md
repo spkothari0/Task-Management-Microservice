@@ -65,7 +65,12 @@ A comprehensive task management system was built using Spring Boot for the back 
    git clone https://github.com/yourusername/task-management-system.git
    cd task-management-system
    ```
-2. **Backend Setup:**
+   
+2. **Environment Variables:**
+   
+   Refer to the attached env.example file to check the environment variables used in the microservices.
+   
+4. **Backend Setup:**
    - Navigate to each microservice directory and run:
      ```bash
      ./mvnw clean install
@@ -73,7 +78,7 @@ A comprehensive task management system was built using Spring Boot for the back 
    - Start the Eureka Server and API Gateway.
    - Start each microservice.
      
-3. **Frontend Setup:**
+5. **Frontend Setup:**
    - Navigate to the frontend directory and install dependencies:
      ```bash
      npm install

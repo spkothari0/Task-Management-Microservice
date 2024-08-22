@@ -1,9 +1,6 @@
-# Task-Management-Microservice
-A project which uses microservice architecture to manage tasks with multiple users
+# Task Master Pro
 
-# Task Management System
-
-A comprehensive task management system built using Spring Boot for the backend and React with Tailwind CSS and MUI for the frontend. The system supports two types of users: **Admin** and **Employee/Helper**. 
+A comprehensive task management system was built using Spring Boot for the back end and React with Tailwind CSS and MUI for the front end. The system supports two types of users: **Admin** and **Employee/Helper**. 
 
 ## Project Overview
 

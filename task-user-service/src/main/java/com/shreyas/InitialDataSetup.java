@@ -33,8 +33,6 @@ public class InitialDataSetup implements CommandLineRunner {
             return;
         createRoleIfNotFound(RoleType.ROLE_ADMIN);
         createRoleIfNotFound(RoleType.ROLE_CUSTOMER);
-        createRoleIfNotFound(RoleType.ROLE_HELPER);
-        createRoleIfNotFound(RoleType.ROLE_USER);
         createAdminUserIfNotFound();
     }
 

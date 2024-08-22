@@ -1,5 +1,7 @@
 import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import React from 'react'
+import { useDispatch } from 'react-redux';
+import { register } from '../../ReduxToolkit/Slices/AuthSlice';
 
 
 const roles = [{ label: 'Admin', value: 'ROLE_ADMIN' }, { label: 'Customer', value: 'ROLE_CUSTOMER' }, { label: 'Helper', value: 'ROLE_HELPER' }]
@@ -20,10 +22,21 @@ export default function SignUp({ togglePanel }) {
         setFormData({ ...formData, [name]: value });
     }
 
+    const dispatch = useDispatch();
+
     const handlSubmit = (e) => {
         e.preventDefault();
-        setFormData({...formData, username: formData.email})
-        console.log("login form data: ", formData);
+        dispatch(register(formData));
+        // clear form data
+        setFormData({
+            firstName: "",
+            lastName: "",
+            email: "",
+            role: "",
+            username: "",
+            password: "",
+        });
+        console.log("Register form data: ", formData);
     }
 
     return (

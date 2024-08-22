@@ -1,64 +1,68 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { baseUrl, setAuthHeader } from "../../Api/api";
-import axios from "axios";
+import { api, baseUrl, setAuthHeader } from "../../Api/api";
+import {handleApiResponse} from "./Utility";
 
-export const login = createAsyncThunk("auth/login", async (user, { rejectWithValue }) => {
+
+export const login = createAsyncThunk("auth/login", async (user) => {
     try {
-        const {data} = await axios.post(`${baseUrl}/api/v1/auth/login`, user);
-        localStorage.setItem("jwt", data.token);
-        console.log("Login Success: ", data);
-        return data; 
+        const {data} = await api.post(`${baseUrl}/api/v1/auth/login`, user);
+        const result = handleApiResponse(data);
+        localStorage.setItem("jwt", result.jwtToken);
+        console.log("Login Success: ", result);
+        return result; 
     } catch (error) {
         console.log("Error: ", error);
-        // throw Error(error.response.data.message);
-        return rejectWithValue(error.message);
+        throw Error(error.response.data.message);
     }
 });
 
-export const register = createAsyncThunk("auth/register", async (user, { rejectWithValue }) => {
+export const register = createAsyncThunk("auth/register", async (user) => {
     try {
-        const {data} = await axios.post(`${baseUrl}/api/v1/user/register`, user);
-        localStorage.setItem("jwt", data.token);
-        console.log("Register Success: ", data);
-        return data; 
+        const {data} = await api.post(`${baseUrl}/api/v1/user/register`, user);
+        const result = handleApiResponse(data);
+        localStorage.setItem("jwt", result.jwtToken);
+        console.log("Register Success: ", result);
+        return result; 
     } catch (error) {
         console.log("Error: ", error);
-        return rejectWithValue(error.message);
+        throw Error(error.response.data.message);
     }
 });
 
-export const logout = createAsyncThunk("auth/logout", async (user, { rejectWithValue }) => {
+export const logout = createAsyncThunk("auth/logout", async (user) => {
     try {
         localStorage.clear();
         console.log("Logout Success");
         return user;
     } catch (error) {
         console.log("Error: ", error);
-        return rejectWithValue(error.message);
+        throw Error(error.response.data.message);
     }
 });
 
-export const getUser = createAsyncThunk("auth/getUser", async (user, { rejectWithValue }) => {
-    setAuthHeader(localStorage.getItem("jwt"), api);
+export const getUser = createAsyncThunk("auth/getUser", async (jwt) => {
+    setAuthHeader(jwt, api);
     try {
         const {data} = await api.get(`/api/v1/user/`);
-        console.log("Get User Success: ", data);
-        return data; 
+        const result = handleApiResponse(data);
+        console.log("Get User Success: ", result);
+        return result; 
     } catch (error) {
         console.log("Error: ", error);
-        return rejectWithValue(error.message);
+        throw Error(error.response.data.message);
     }
 });
 
-export const getUserList = createAsyncThunk("auth/getUserList", async (user, { rejectWithValue }) => {
+export const getUserList = createAsyncThunk("auth/getUserList", async () => {
     setAuthHeader(localStorage.getItem("jwt"), api);
     try {
         const {data} = await api.get(`/api/v1/user/all`);
-        console.log("Get User List Success: ", data);
-        return data;
+        const result = handleApiResponse(data);
+        console.log("Get User List Success: ", result);
+        return result;
     } catch (error) {
         console.log("Error: ", error);
-        return rejectWithValue(error.message);
+        throw Error(error.response.data.message);
     }
 });
 

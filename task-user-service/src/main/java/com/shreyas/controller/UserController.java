@@ -29,7 +29,6 @@ public class UserController extends BaseController {
     }
 
     @PostMapping(value = "/register")
-    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Register a user with the specified username and password and other information. Accessible to Admin only.",
             description = "The Role of a user can be one of the following: ROLE_ADMIN, ROLE_STUDENT, ROLE_TEACHER, ROLE_USER."
     )

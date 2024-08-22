@@ -3,11 +3,13 @@ import React, { useState } from 'react';
 import './Sidebar.css';
 import CreateTask from '../Task/TaskCard/CreateTask';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../ReduxToolkit/Slices/AuthSlice';
 
 const menu = [
     { name: "Home", value: "Home", role: ["ROLE_ADMIN", "ROLE_CUSTOMER", "ROLE_HELPER"] },
     { name: "COMPLETED", value: "COMPLETED", role: ["ROLE_ADMIN", "ROLE_CUSTOMER", "ROLE_HELPER"] },
-    { name: "ASSIGNED", value: "ASSIGNED", role: ["ROLE_ADMIN"] },
+    { name: "ASSIGNED", value: "IN_PROGRESS", role: ["ROLE_ADMIN"] },
     { name: "PENDING", value: "PENDING", role: ["ROLE_ADMIN"] },
     { name: "Create New Task", value: "Home", role: ["ROLE_ADMIN"] },
     { name: "Notification", value: "Notification", role: ["ROLE_CUSTOMER", "ROLE_HELPER"] }
@@ -18,7 +20,7 @@ const role = "ROLE_ADMIN";
 const Sidebar = () => {
     const location = useLocation();
     const nevigate = useNavigate();
-
+    const dispatch = useDispatch();
 
     const [activeMenu, setActiveMenu] = useState("Home");
     const handleMenuChange = (item) => {
@@ -34,7 +36,7 @@ const Sidebar = () => {
             nevigate(updatedUrl);
         }
         else{
-            updatedParams.set("filter", item.name);
+            updatedParams.set("filter", item.value);
             const query = updatedParams.toString();
             const updatedUrl = query?`${location.pathname}?${query}`:location.pathname;
             nevigate(updatedUrl);
@@ -51,6 +53,7 @@ const Sidebar = () => {
     }
 
     const handleLogout = () => {
+        dispatch(logout());
         console.log("handle Logout");
     }
     return (

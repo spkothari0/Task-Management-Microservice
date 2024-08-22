@@ -54,7 +54,9 @@ public class UserServicesImpl implements UserDetailsService, IUserServices {
     public UserBean createUser(UserBean userBean) {
         if (userRepo.findByUsername(userBean.getUsername()).isPresent() || userRepo.findByEmail(userBean.getEmail()).isPresent())
             throw new IllegalStateException("User already exists. Please update your username and email");
-
+        if(userBean.getUsername().isEmpty()){
+            userBean.setUsername(userBean.getEmail().split("@")[0]);
+        }
         return saveUser(userBean);
     }
 

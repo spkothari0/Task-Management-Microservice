@@ -1,6 +1,11 @@
 import { Button, TextField } from '@mui/material';
 import React from 'react'
+import { useDispatch } from 'react-redux';
+import { login } from '../../ReduxToolkit/Slices/AuthSlice';
 export default function SignIn({togglePanel}) {
+
+    const dispatch = useDispatch();
+
     const [formData, setFormData] = React.useState({
         email: "",
         password: ""
@@ -13,6 +18,7 @@ export default function SignIn({togglePanel}) {
 
     const handlSubmit = (e) => {
         e.preventDefault();
+        dispatch(login({ username: formData.email, password: formData.password }));
         console.log("login form data: ", formData);
     }
 
@@ -24,7 +30,7 @@ export default function SignIn({togglePanel}) {
                     fullWidth
                     label='Email'
                     name='email'
-                    type='email'
+                    // type='email'
                     value={formData.email}
                     placeholder='Enter your email'
                     onChange={handleChange}

@@ -6,6 +6,10 @@ import { Autocomplete, Button, Grid, TextField } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { fetchTaskById, updateTask } from '../../../ReduxToolkit/Slices/TaskSlice';
+import { useLocation } from 'react-router-dom';
 
 const style = {
     position: 'absolute',
@@ -22,7 +26,10 @@ const style = {
 const allTags = ["Angular", "React", "Spring Boot", "SQL", "JavaScript", "TypeScript", "NodeJS", "ExpressJS", "MongoDB", "PostgreSQL", "MySQL", "HTML", "CSS", "SCSS", "SASS", "Bootstrap", "Material UI", "Tailwind CSS", "Selenium", "Docker", "Kubernetes", "Jenkins", "Git", "GitHub", "GitLab", "AWS", "Azure", "GCP", "Heroku", "Netlify", "Vercel", "Firebase", "OAuth", "JWT", "NestJS", "Python", "Flask", "Ruby", "Ruby on Rails", "Java", "C", "C++", "C#", "PHP", "WordPress", "Shopify"];
 
 
-export default function EditTaskCard({ handleClose, open }) {
+export default function EditTaskCard({ item, handleClose, open }) {
+
+    const dispatch = useDispatch();
+    const { task } = useSelector(store => store);
 
     const [formData, setFormData] = React.useState({
         title: "",
@@ -33,6 +40,11 @@ export default function EditTaskCard({ handleClose, open }) {
     });
 
     const [selectedTags, setSelectedTags] = React.useState([]);
+
+
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const taskId = queryParams.get("taskId");
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -56,6 +68,7 @@ export default function EditTaskCard({ handleClose, open }) {
         const formattedDeadline = formatData(deadline);
         formData.deadline = formattedDeadline;
         formData.tag = selectedTags;
+        dispatch(updateTask({ id: item.id, task: formData }));
         handleClose();
     }
 
@@ -75,6 +88,17 @@ export default function EditTaskCard({ handleClose, open }) {
         return formattedDate;
     }
 
+    useEffect(() => {
+        dispatch(fetchTaskById(taskId));
+    }, [taskId]);
+
+    useEffect(() => {
+        if (task.taskDetails) {
+            setFormData(task.taskDetails);
+            setSelectedTags(task.taskDetails.tag);
+        }
+    }, [task.taskDetails]);
+
     return (
         <div>
             <Modal
@@ -84,7 +108,7 @@ export default function EditTaskCard({ handleClose, open }) {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                <Typography className='text-center pb-5 text-bold' id="create-task" variant="h6" component="h2">
+                    <Typography className='text-center pb-5 text-bold' id="create-task" variant="h6" component="h2">
                         Edit Task
                     </Typography>
                     <form>

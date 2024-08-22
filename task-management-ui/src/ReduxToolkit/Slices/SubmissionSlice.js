@@ -1,15 +1,17 @@
-import { createAsyncThunk, createSlice, isRejectedWithValue } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { api, setAuthHeader } from "../../Api/api";
+import { handleApiResponse } from "./Utility";
 
 export const submitTask = createAsyncThunk("submissions/submitTask", async ({taskId, repoLink}) => {
     setAuthHeader(localStorage.getItem("jwt"), api);
     try {
         const { data } = await api.post(`/api/v1/submissions?taskId=${taskId}&repoLink=${repoLink}`,{});
-        console.log("Submit Task Success: ", data);
-        return data;
+        const result = handleApiResponse(data);
+        console.log("Submit Task Success: ", result);
+        return result;
     } catch (error) {
         console.log("Error: ", error);
-        return isRejectedWithValue(error.message);
+        throw Error(error.response.data.message);
     }
 });
 
@@ -17,11 +19,12 @@ export const fetchAllSubmissions = createAsyncThunk("submissions/fetchAllSubmiss
     setAuthHeader(localStorage.getItem("jwt"), api);
     try {
         const { data } = await api.get(`/api/v1/submissions`);
-        console.log("Fetch all Submissions Success: ", data);
-        return data;
+        const result = handleApiResponse(data);
+        console.log("Fetch all Submissions Success: ", result);
+        return result;
     } catch (error) {
         console.log("Error: ", error);
-        return isRejectedWithValue(error.message);
+        throw Error(error.response.data.message);
     }
 });
 
@@ -29,11 +32,12 @@ export const fetchSubmissionsByTaskId = createAsyncThunk("submissions/fetchSubmi
     setAuthHeader(localStorage.getItem("jwt"), api);
     try {
         const { data } = await api.get(`/api/v1/submissions/task/${taskId}`);
-        console.log("Fetch Submissions By Task Id Success: ", data);
-        return data;
+        const result = handleApiResponse(data);
+        console.log("Fetch Submissions By Task Id Success: ", result);
+        return result;
     } catch (error) {
         console.log("Error: ", error);
-        return isRejectedWithValue(error.message);
+        throw Error(error.response.data.message);
     }
 });
 
@@ -41,11 +45,12 @@ export const acceptOrDeclineSubmission = createAsyncThunk("submissions/acceptOrD
     setAuthHeader(localStorage.getItem("jwt"), api);
     try {
         const { data } = await api.put(`/api/v1/submissions/${submissionId}/accept?accept=${status}`, {});
-        console.log("Accept or Decline Submission Success: ", data);
-        return data;
+        const result = handleApiResponse(data);
+        console.log("Accept or Decline Submission Success: ", result);
+        return result;
     } catch (error) {
         console.log("Error: ", error);
-        return isRejectedWithValue(error.message);
+        throw Error(error.response.data.message);
     }
 });
 

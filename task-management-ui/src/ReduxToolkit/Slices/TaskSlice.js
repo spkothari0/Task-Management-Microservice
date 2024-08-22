@@ -1,15 +1,17 @@
-import { createAsyncThunk, createSlice, isRejectedWithValue } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { api, setAuthHeader } from "../../Api/api";
+import { handleApiResponse } from "./Utility";
 
 export const fetchTasks = createAsyncThunk("task/fetchTasks", async ({status}) => {
     setAuthHeader(localStorage.getItem("jwt"), api);
     try {
         const { data } = await api.get(`/api/v1/tasks/`, { params: { status } });
-        console.log("Fetch Task Success: ", data);
-        return data;
+        const result = handleApiResponse(data);
+        console.log("Fetch Task Success: ", result);
+        return result;
     } catch (error) {
         console.log("Error: ", error);
-        return isRejectedWithValue(error.message);
+        throw Error(error.response.data.message);
     }
 });
 
@@ -17,11 +19,12 @@ export const fetchUsersTasks = createAsyncThunk("task/fetchUsersTasks", async ({
     setAuthHeader(localStorage.getItem("jwt"), api);
     try {
         const { data } = await api.get(`/api/v1/tasks/user`, { params: { status } });
-        console.log("Fetch User Task Success: ", data);
-        return data;
+        const result = handleApiResponse(data);
+        console.log("Fetch User Task Success: ", result);
+        return result;
     } catch (error) {
         console.log("Error: ", error);
-        return isRejectedWithValue(error.message);
+        throw Error(error.response.data.message);
     }
 });
 
@@ -29,11 +32,12 @@ export const fetchTaskById = createAsyncThunk("task/fetchTaskById", async (id) =
     setAuthHeader(localStorage.getItem("jwt"), api);
     try {
         const { data } = await api.get(`/api/v1/tasks/${id}`);
-        console.log("Fetch Task By Id Success: ", data);
-        return data;
+        const result = handleApiResponse(data);
+        console.log("Fetch Task By Id Success: ", result);
+        return result;
     } catch (error) {
         console.log("Error: ", error);
-        return isRejectedWithValue(error.message);
+        throw Error(error.response.data.message);
     }
 });
 
@@ -41,11 +45,12 @@ export const createTask = createAsyncThunk("task/createTask", async (task) => {
     setAuthHeader(localStorage.getItem("jwt"), api);
     try {
         const { data } = await api.post(`/api/v1/tasks/`, task);
-        console.log("Create Task Success: ", data);
-        return data;
+        const result = handleApiResponse(data);
+        console.log("Create Task Success: ", result);
+        return result;
     } catch (error) {
         console.log("Error: ", error);
-        return isRejectedWithValue(error.message);
+        throw Error(error.response.data.message);
     }
 });
 
@@ -53,11 +58,12 @@ export const updateTask = createAsyncThunk("task/updateTask", async ({id,task}) 
     setAuthHeader(localStorage.getItem("jwt"), api);
     try {
         const { data } = await api.put(`/api/v1/tasks/${id}`, task);
-        console.log("Update Task Success: ", data);
-        return data;
+        const result = handleApiResponse(data);
+        console.log("Update Task Success: ", result);
+        return result;
     } catch (error) {
         console.log("Error: ", error);
-        return isRejectedWithValue(error.message);
+        throw Error(error.response.data.message);
     }
 });
 
@@ -65,11 +71,12 @@ export const assignTaskToUser = createAsyncThunk("task/assignTaskToUser", async 
     setAuthHeader(localStorage.getItem("jwt"), api);
     try {
         const { data } = await api.put(`/api/v1/tasks/${id}/user/${userId}/assigned`);
-        console.log("Assigned Task Success: ", data);
-        return data;
+        const result = handleApiResponse(data);
+        console.log("Assigned Task Success: ", result);
+        return result;
     } catch (error) {
         console.log("Error: ", error);
-        return isRejectedWithValue(error.message);
+        throw Error(error.response.data.message);
     }
 });
 
@@ -77,11 +84,11 @@ export const deleteTask = createAsyncThunk("task/deleteTask", async (id) => {
     setAuthHeader(localStorage.getItem("jwt"), api);
     try {
         await api.delete(`/api/v1/tasks/${id}`);
-        console.log("Delete Task Success: ", data);
+        console.log("Delete Task Success: ", id);
         return id;
     } catch (error) {
         console.log("Error: ", error);
-        return isRejectedWithValue(error.message);
+        throw Error(error.response.data.message);
     }
 });
 
@@ -91,7 +98,7 @@ const taskSlice = createSlice({
         tasks: [],
         loading: false,
         error: null,
-        taskDetailss: null,
+        taskDetails: null,
         usersTasks: [],
     },
     reducers: {},
@@ -192,7 +199,7 @@ const taskSlice = createSlice({
         })
         .addCase(fetchTaskById.fulfilled, (state, action)=>{
             state.loading = false;
-            state.taskDetailss = action.payload;
+            state.taskDetails = action.payload;
         })
         .addCase(fetchTaskById.rejected, (state, action)=>{
             state.loading = false;

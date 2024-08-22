@@ -31,13 +31,12 @@ public class UserBean {
     @NotBlank(message="Password must not be null")
     private String password;
 
-    @NotNull(message = "Username must not be null")
+//    @NotNull(message = "Username must not be null")
     private String username;
 
     @NotNull
     private String role;
 
-    @NotNull
     private LocalDate dob;
 
     private Boolean isLocked = false;

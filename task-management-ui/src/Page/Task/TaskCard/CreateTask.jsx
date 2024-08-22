@@ -6,6 +6,8 @@ import { Autocomplete, Button, Grid, TextField } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { useDispatch } from 'react-redux';
+import { createTask } from '../../../ReduxToolkit/Slices/TaskSlice';
 
 const style = {
     position: 'absolute',
@@ -23,13 +25,14 @@ const allTags = ["Angular", "React", "Spring Boot", "SQL", "JavaScript", "TypeSc
 
 
 export default function CreateTask({ handleClose, open }) {
+    const dispatch = useDispatch();
 
     const [formData, setFormData] = React.useState({
         title: "",
-        imageUrl: "",
+        imageURL: "",
         description: "",
-        tag: [],
-        deadline: new Date()
+        tags: [],
+        deadLine: new Date()
     });
 
     const [selectedTags, setSelectedTags] = React.useState([]);
@@ -46,16 +49,17 @@ export default function CreateTask({ handleClose, open }) {
     const handleDeadlineChange = (date) => {
         setFormData({
             ...formData,
-            deadline: date
+            deadLine: date
         });
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const { deadline } = formData;
+        const { deadLine: deadline } = formData;
         const formattedDeadline = formatData(deadline);
-        formData.deadline = formattedDeadline;
-        formData.tag = selectedTags;
+        formData.deadLine = formattedDeadline;
+        formData.tags = selectedTags;
+        dispatch(createTask(formData));
         handleClose();
     }
 
@@ -100,7 +104,7 @@ export default function CreateTask({ handleClose, open }) {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField label="Image URL" fullWidth name='imageUrl' value={formData.imageUrl}
+                                <TextField label="Image URL" fullWidth name='imageURL' value={formData.imageURL}
                                     onChange={handleChange}
                                 />
                             </Grid>

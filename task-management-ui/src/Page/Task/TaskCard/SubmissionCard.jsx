@@ -1,11 +1,16 @@
-import { Avatar, Button, IconButton, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import { useDispatch } from "react-redux";
+import { acceptOrDeclineSubmission } from "../../../ReduxToolkit/Slices/SubmissionSlice";
 
-export default function SubmissionCard() {
+export default function SubmissionCard({ item }) {
+
+    const dispatch = useDispatch();
 
     const handleAcceptDecline = (status) => {
+        dispatch(acceptOrDeclineSubmission({submissionId:item.id, status}));
         console.log(status);
     }
 
@@ -16,7 +21,7 @@ export default function SubmissionCard() {
                     <span>Repository</span>
                     <div className="flex items-center gap-2 text-[#c24dd0]">
                         <OpenInNewIcon />
-                        <a href="https://github.com/spkothari0" target="_blank" rel="noopener noreferrer">
+                        <a href={item.repoLink} target="_blank" rel="noopener noreferrer">
                             Link
                         </a>
                     </div>
@@ -24,25 +29,26 @@ export default function SubmissionCard() {
 
                 <div className="flex items-center gap-2 text-xs" >
                     <p>Submission Time : </p>
-                    <p className="text-gray-400">2024-01-18T74:24:54</p>
+                    <p className="text-gray-400">{item.submissionTime}</p>
                 </div>
             </div>
             <div>
                 {
-                    true ?
+                    item.status === 'PENDING' ?
                         <div className="flex gap-5">
                             <div className="text-green-500">
-                                <IconButton color="success" onClick={()=>handleAcceptDecline("ACCEPT")}>
+                                <IconButton color="success" onClick={() => handleAcceptDecline(true)}>
                                     <CheckIcon />
                                 </IconButton>
                             </div>
                             <div className="text-red-500">
-                                <IconButton color="error" onClick={()=>handleAcceptDecline("REJECT")}>
+                                <IconButton color="error" onClick={() => handleAcceptDecline(false)}>
                                     <CloseIcon />
                                 </IconButton>
                             </div>
-                        </div> :
-                        <Button size="small" variant="outlined" color={true ? "success" : "error"}>Accepted</Button>
+                        </div> 
+                        :
+                        <Button size="small" variant="outlined" color={item.status==='ACCEPTED' ? "success" : "error"}>{item.status}</Button>
                 }
             </div>
         </div>

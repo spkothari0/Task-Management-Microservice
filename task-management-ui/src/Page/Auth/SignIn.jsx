@@ -19,7 +19,6 @@ export default function SignIn({togglePanel}) {
     const handlSubmit = (e) => {
         e.preventDefault();
         dispatch(login({ username: formData.email, password: formData.password }));
-        console.log("login form data: ", formData);
     }
 
     return (

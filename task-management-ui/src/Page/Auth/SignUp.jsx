@@ -36,7 +36,6 @@ export default function SignUp({ togglePanel }) {
             username: "",
             password: "",
         });
-        console.log("Register form data: ", formData);
     }
 
     return (

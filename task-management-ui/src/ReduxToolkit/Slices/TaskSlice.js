@@ -7,10 +7,9 @@ export const fetchTasks = createAsyncThunk("task/fetchTasks", async ({status}) =
     try {
         const { data } = await api.get(`/api/v1/tasks/`, { params: { status } });
         const result = handleApiResponse(data);
-        console.log("Fetch Task Success: ", result);
         return result;
     } catch (error) {
-        console.log("Error: ", error);
+        
         throw Error(error.response.data.message);
     }
 });
@@ -20,10 +19,9 @@ export const fetchUsersTasks = createAsyncThunk("task/fetchUsersTasks", async ({
     try {
         const { data } = await api.get(`/api/v1/tasks/user`, { params: { status } });
         const result = handleApiResponse(data);
-        console.log("Fetch User Task Success: ", result);
         return result;
     } catch (error) {
-        console.log("Error: ", error);
+        
         throw Error(error.response.data.message);
     }
 });
@@ -33,10 +31,9 @@ export const fetchTaskById = createAsyncThunk("task/fetchTaskById", async (id) =
     try {
         const { data } = await api.get(`/api/v1/tasks/${id}`);
         const result = handleApiResponse(data);
-        console.log("Fetch Task By Id Success: ", result);
         return result;
     } catch (error) {
-        console.log("Error: ", error);
+        
         throw Error(error.response.data.message);
     }
 });
@@ -46,10 +43,9 @@ export const createTask = createAsyncThunk("task/createTask", async (task) => {
     try {
         const { data } = await api.post(`/api/v1/tasks/`, task);
         const result = handleApiResponse(data);
-        console.log("Create Task Success: ", result);
         return result;
     } catch (error) {
-        console.log("Error: ", error);
+        
         throw Error(error.response.data.message);
     }
 });
@@ -59,10 +55,9 @@ export const updateTask = createAsyncThunk("task/updateTask", async ({id,task}) 
     try {
         const { data } = await api.put(`/api/v1/tasks/${id}`, task);
         const result = handleApiResponse(data);
-        console.log("Update Task Success: ", result);
         return result;
     } catch (error) {
-        console.log("Error: ", error);
+        
         throw Error(error.response.data.message);
     }
 });
@@ -72,10 +67,9 @@ export const assignTaskToUser = createAsyncThunk("task/assignTaskToUser", async 
     try {
         const { data } = await api.put(`/api/v1/tasks/${id}/user/${userId}/assigned`);
         const result = handleApiResponse(data);
-        console.log("Assigned Task Success: ", result);
         return result;
     } catch (error) {
-        console.log("Error: ", error);
+        
         throw Error(error.response.data.message);
     }
 });
@@ -84,10 +78,9 @@ export const deleteTask = createAsyncThunk("task/deleteTask", async (id) => {
     setAuthHeader(localStorage.getItem("jwt"), api);
     try {
         await api.delete(`/api/v1/tasks/${id}`);
-        console.log("Delete Task Success: ", id);
         return id;
     } catch (error) {
-        console.log("Error: ", error);
+        
         throw Error(error.response.data.message);
     }
 });

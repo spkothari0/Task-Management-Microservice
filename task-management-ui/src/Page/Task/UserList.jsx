@@ -32,7 +32,6 @@ export default function UserList({ handleClose, open, taskId }) {
   const {auth} = useSelector(store=>store);
 
   const handleAssignTask = (item) => {
-    console.log("Task "+ taskId +" Assigned to ",item);
     dispatch(assignTaskToUser({id:taskId,userId:item.id}));
   }
 

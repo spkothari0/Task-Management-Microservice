@@ -8,10 +8,8 @@ export const login = createAsyncThunk("auth/login", async (user) => {
         const {data} = await api.post(`${baseUrl}/api/v1/auth/login`, user);
         const result = handleApiResponse(data);
         localStorage.setItem("jwt", result.jwtToken);
-        console.log("Login Success: ", result);
         return result; 
     } catch (error) {
-        console.log("Error: ", error);
         throw Error(error.response.data.message);
     }
 });
@@ -21,10 +19,8 @@ export const register = createAsyncThunk("auth/register", async (user) => {
         const {data} = await api.post(`${baseUrl}/api/v1/user/register`, user);
         const result = handleApiResponse(data);
         localStorage.setItem("jwt", result.jwtToken);
-        console.log("Register Success: ", result);
         return result; 
     } catch (error) {
-        console.log("Error: ", error);
         throw Error(error.response.data.message);
     }
 });
@@ -32,10 +28,8 @@ export const register = createAsyncThunk("auth/register", async (user) => {
 export const logout = createAsyncThunk("auth/logout", async (user) => {
     try {
         localStorage.clear();
-        console.log("Logout Success");
         return user;
     } catch (error) {
-        console.log("Error: ", error);
         throw Error(error.response.data.message);
     }
 });
@@ -45,10 +39,8 @@ export const getUser = createAsyncThunk("auth/getUser", async (jwt) => {
     try {
         const {data} = await api.get(`/api/v1/user/`);
         const result = handleApiResponse(data);
-        console.log("Get User Success: ", result);
         return result; 
     } catch (error) {
-        console.log("Error: ", error);
         throw Error(error.response.data.message);
     }
 });
@@ -58,10 +50,8 @@ export const getUserList = createAsyncThunk("auth/getUserList", async () => {
     try {
         const {data} = await api.get(`/api/v1/user/all`);
         const result = handleApiResponse(data);
-        console.log("Get User List Success: ", result);
         return result;
     } catch (error) {
-        console.log("Error: ", error);
         throw Error(error.response.data.message);
     }
 });

@@ -54,7 +54,6 @@ const Sidebar = () => {
 
     const handleLogout = () => {
         dispatch(logout());
-        console.log("handle Logout");
     }
     return (
         <>

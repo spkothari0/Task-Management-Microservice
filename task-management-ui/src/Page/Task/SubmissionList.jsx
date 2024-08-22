@@ -25,7 +25,6 @@ export default function SubmissionList({ taskId, handleClose, open }) {
     const { submission } = useSelector(store => store);
 
     useEffect(() => {
-        console.log("Task ID", taskId);
         if (taskId)
             dispatch(fetchSubmissionsByTaskId(taskId));
     }, [taskId]);

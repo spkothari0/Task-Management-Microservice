@@ -7,10 +7,8 @@ export const submitTask = createAsyncThunk("submissions/submitTask", async ({tas
     try {
         const { data } = await api.post(`/api/v1/submissions?taskId=${taskId}&repoLink=${repoLink}`,{});
         const result = handleApiResponse(data);
-        console.log("Submit Task Success: ", result);
         return result;
     } catch (error) {
-        console.log("Error: ", error);
         throw Error(error.response.data.message);
     }
 });
@@ -20,10 +18,9 @@ export const fetchAllSubmissions = createAsyncThunk("submissions/fetchAllSubmiss
     try {
         const { data } = await api.get(`/api/v1/submissions`);
         const result = handleApiResponse(data);
-        console.log("Fetch all Submissions Success: ", result);
         return result;
     } catch (error) {
-        console.log("Error: ", error);
+        
         throw Error(error.response.data.message);
     }
 });
@@ -33,10 +30,9 @@ export const fetchSubmissionsByTaskId = createAsyncThunk("submissions/fetchSubmi
     try {
         const { data } = await api.get(`/api/v1/submissions/task/${taskId}`);
         const result = handleApiResponse(data);
-        console.log("Fetch Submissions By Task Id Success: ", result);
         return result;
     } catch (error) {
-        console.log("Error: ", error);
+        
         throw Error(error.response.data.message);
     }
 });
@@ -46,10 +42,9 @@ export const acceptOrDeclineSubmission = createAsyncThunk("submissions/acceptOrD
     try {
         const { data } = await api.put(`/api/v1/submissions/${submissionId}/accept?accept=${status}`, {});
         const result = handleApiResponse(data);
-        console.log("Accept or Decline Submission Success: ", result);
         return result;
     } catch (error) {
-        console.log("Error: ", error);
+        
         throw Error(error.response.data.message);
     }
 });

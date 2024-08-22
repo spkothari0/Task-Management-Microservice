@@ -11,7 +11,6 @@ export default function SubmissionCard({ item }) {
 
     const handleAcceptDecline = (status) => {
         dispatch(acceptOrDeclineSubmission({submissionId:item.id, status}));
-        console.log(status);
     }
 
     return (

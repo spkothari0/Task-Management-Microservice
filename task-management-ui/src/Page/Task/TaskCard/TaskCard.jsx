@@ -36,22 +36,18 @@ export default function TaskCard({ item }) {
     const handleCloseUserList = () => {
         handleMenuClose();
         setOpenUserList(false);
-        console.log("Close UserList");
     }
     const handleOpenUserList = () => {
         setOpenUserList(true);
         handleMenuClose();
-        console.log("Open User List");
     }
 
     const [openSubmissionList, setOpenSubmissionList] = React.useState(false);
     const handleCloseSubmissionList = () => {
         handleMenuClose();
         setOpenSubmissionList(false);
-        console.log("Close SubmissionList");
     }
     const handleOpenSubmissionList = () => {
-        console.log("Task is when opening submission List", item);
         setOpenSubmissionList(true);
         handleMenuClose();
     }
@@ -80,7 +76,6 @@ export default function TaskCard({ item }) {
     const handleDeleteTask = () => {
         dispatch(deleteTask(item.id));
         handleMenuClose();
-        console.log("Delete Task", item.id);
     }
 
     const [openSubmitForm, setOpenSubmitForm] = React.useState(false);

@@ -20,19 +20,33 @@ A comprehensive task management system was built using Spring Boot for the back 
 - **Spring Boot**: The core framework for building the backend services.
 - **Microservices**:
   - **User Microservice**: Manages admin and employee users.
+  - <img width="938" alt="image" src="https://github.com/user-attachments/assets/1bc2fbf2-7938-432a-b62b-c9e6f6fff25f">
+
   - **Task Microservice**: Handles task creation, assignment, and management.
+  - <img width="948" alt="image" src="https://github.com/user-attachments/assets/367f5fe9-6982-498d-a683-16e397cbe6b5">
+
   - **Submission Microservice**: Manages task submissions by employees.
+  - <img width="945" alt="image" src="https://github.com/user-attachments/assets/766b1742-8edd-42bc-8594-3f6366a68823">
+
 - **Eureka Server**: Manages service discovery, ensuring all microservices are running and healthy, with load balancing support.
+  - <img width="960" alt="image" src="https://github.com/user-attachments/assets/ed9c5973-68b9-4307-a2b3-f3f51332c4ff">
+
 - **API Gateway**: Serves as the entry point for all microservices.
+  - All the API endpoints are accessible with port 5000.
 - **OpenFeign**: Facilitates communication between microservices.
 - **Swagger**: Provides an interactive interface to access and test API endpoints.
 - **JWT & Spring Security**: Implements authentication and role-based authorization.
 - **Redis Caching**: API-level caching to optimize performance by reducing repeated calls to controllers.
+  - <img width="817" alt="image" src="https://github.com/user-attachments/assets/15ddc9ee-bd6b-4340-b19d-7e52493c1ff5">
+    - Custom annotation "HttpCacheable" was created which annotates the controllers which should cache its response.
 - **Filters**:
   - **CorrelationId Filter**: Adds a mandatory header for tracking requests in logs.
+    - Correlation header should be added with each request. This id can be used to check the logs and easily detect the error for a particular request.
   - **Auth Filter**: Manages user authentication.
+    - Except Login and register endpoint, each request should have Auth header included or else a 401 error will be returned.
   - **Redis Cache Filter**: Handles API-level caching.
-- **AOP (Aspect-Oriented Programming)**: Logs method calls before and after execution.
+    - If data is present in the cache then it should be returned directly from the middleware, or else it should continue the flow and the returned response should be added to the cache for the next request to this endpoint.
+- **AOP (Aspect-Oriented Programming)**: Logs method calls before and after execution of every method in Controller, Service and Repo layer for ease of logging and tracking the flow of control. 
 - **AWS S3**: Stores user profile images.
 - **Email Verification**: Validates user email addresses upon registration.
 
@@ -47,6 +61,7 @@ A comprehensive task management system was built using Spring Boot for the back 
 - **TaskList**: Shows a list of tasks based on filters.
 - **Submissions**: Allows employees to submit their work.
 - **UserList**: Displays a list of registered users.
+- Many other components were created to support the above primary components.
 
 ## Getting Started
 
@@ -56,7 +71,6 @@ A comprehensive task management system was built using Spring Boot for the back 
 - npm or yarn
 - Redis
 - AWS account for S3
-- Eureka Server
 
 ### Installation
 

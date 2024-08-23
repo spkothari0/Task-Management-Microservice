@@ -63,17 +63,17 @@ A comprehensive task management system was built using Spring Boot for the back 
 - **UserList**: Displays a list of registered users.
 - Many other components were created to support the above primary components.
 - **Admin View:**
-- <div style="display: flex; flex-wrap: wrap;">
-    <img src="./Images/All Tasks visible to admin.png" alt="All Tasks" style="width: 30%; margin: 1%;" />
-    <img src="./Images/Login.png" alt="Login" style="width: 30%; margin: 1%;" />
-    <img src="./Images/Pending tasks filter.png" alt="Pending Tasks" style="width: 30%; margin: 1%;" />
+  <div style="display: flex; flex-wrap: wrap;">
+    <img src="./Images/All Tasks visible to admin.png" alt="All Tasks" style="width: 40%; margin: 1%;" />
+    <img src="./Images/Login.png" alt="Login" style="width: 40%; margin: 1%;" />
+    <img src="./Images/Pending tasks filter.png" alt="Pending Tasks" style="width: 40%; margin: 1%;" />
     
-    <img src="./Images/Approval of task submissions.png" alt="Approve or Reject the tasks" style="width: 30%; margin: 1%;" />
+    <img src="./Images/Approval of task submissions.png" alt="Approve or Reject the tasks" style="width: 40%; margin: 1%;" />
   </div>
 - **Customer View:**
-- <div style="display: flex; flex-wrap: wrap;">
-    <img src="./Images/All assigned task for customer role user.png" alt="Assigned Tasks in customer view" style="width: 30%; margin: 1%;" />
-    <img src="./Images/Submit the task with repo link.png" alt="Submit the task" style="width: 30%; margin: 1%;" />
+  <div style="display: flex; flex-wrap: wrap;">
+    <img src="./Images/All assigned task for customer role user.png" alt="Assigned Tasks in customer view" style="width: 40%; margin: 1%;" />
+    <img src="./Images/Submit the task with repo link.png" alt="Submit the task" style="width: 40%; margin: 1%;" />
   </div>
 
 

@@ -1,0 +1,114 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: taskMgmt_task_user_service
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - mynetwork
+
+  eureka-server:
+    build: ./eureka-server
+    container_name: eureka-server
+    ports:
+      - "8070:8070"
+    networks:
+      - mynetwork
+
+
+
+  user-service:
+    build: ./task-user-service
+    container_name: user-service
+    ports:
+      - "8081:8080"
+    environment:
+      - EUREKA_SERVER=http://eureka-server:8070/eureka/
+      - MYSQL_HOST=mysql-container
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=taskMgmt_task_user_service
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+    networks:
+      - mynetwork
+    depends_on:
+      - eureka-server
+      - mysql
+
+  task-service:
+    build: ./task-service
+    container_name: task-service
+    ports:
+      - "8082:8080"
+    environment:
+      - EUREKA_SERVER=http://eureka-server:8070/eureka/
+      - MYSQL_HOST=mysql-container
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=taskMgmt_task_service
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+    networks:
+      - mynetwork
+    depends_on:
+      - eureka-server
+      - mysql
+
+  submission-service:
+    build: ./task-submission-service
+    container_name: submission-service
+    ports:
+      - "8083:8080"
+    environment:
+      - EUREKA_SERVER=http://eureka-server:8070/eureka/
+      - MYSQL_HOST=mysql-container
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=taskMgmt_task_submission_service
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=user_password
+    networks:
+      - mynetwork
+    depends_on:
+      - eureka-server
+      - mysql
+
+  gateway:
+    build: ./gateway
+    container_name: api-gateway
+    ports:
+      - "5000:5000"
+    environment:
+      - EUREKA_SERVER=http://eureka-server:8070/eureka/
+    networks:
+      - mynetwork
+    depends_on:
+      - eureka-server
+
+  frontend:
+    build: ./task-management-ui
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - mynetwork
+    depends_on:
+      - user-service
+      - task-service
+      - submission-service
+      - gateway
+
+networks:
+  mynetwork:
+    driver: bridge
+
+volumes:
+  mysql_data:

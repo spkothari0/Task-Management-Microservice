@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.UUID;
 
-@FeignClient(name = "TASK-SERVICE", url = "http://localhost:5002", configuration = FeignClientConfig.class)
+@FeignClient(name = "TASK-SERVICE", configuration = FeignClientConfig.class)
 public interface TaskService {
     @GetMapping(value = "/api/v1/tasks/{id}")
     APIResponse<TaskDto> getTaskById(@PathVariable UUID id) throws Exception;

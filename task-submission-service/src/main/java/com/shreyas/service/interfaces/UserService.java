@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 @Service
-@FeignClient(name = "USER-SERVICE", url = "http://localhost:5001", configuration = FeignClientConfig.class)
+@FeignClient(name = "USER-SERVICE", configuration = FeignClientConfig.class)
 public interface UserService {
     @GetMapping("/api/v1/user/")
     APIResponse<UserDto> getUser(@RequestHeader("Authorization") String token);

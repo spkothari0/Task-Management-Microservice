@@ -29,6 +29,7 @@ A comprehensive task management system was built using Spring Boot for the back 
   - <img width="945" alt="image" src="https://github.com/user-attachments/assets/766b1742-8edd-42bc-8594-3f6366a68823">
 
 - **Eureka Server**: Manages service discovery, ensuring all microservices are running and healthy, with load balancing support.
+- Since we have added the eureka server in api gateway, we can access it directly from the api gateway endpoint: http://localhost:5000/eureka/web
   - <img width="960" alt="image" src="https://github.com/user-attachments/assets/ed9c5973-68b9-4307-a2b3-f3f51332c4ff">
 
 - **API Gateway**: Serves as the entry point for all microservices.

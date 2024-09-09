@@ -35,6 +35,10 @@ A comprehensive task management system was built using Spring Boot for the back 
 - **Resilience4J implementation:**
   - Implemented Resilience4j to enhance fault tolerance in the application by incorporating `@CircuitBreakers` mechanisms for external service calls and additionally `@Retry` and `@TimeLimiter` can further be added for fine-grained control over fault tolerance.
   
+- **Zipkin**:
+  - Integrated Zipkin for distributed tracing, enabling real-time tracking of service requests and performance analysis across microservices, allowing for better monitoring, troubleshooting, and optimization of service interactions within the application
+  - <img width="960" src="./Images/zipkin.png" alt="Zipkin"/>
+
 - **API Gateway**: Serves as the entry point for all microservices.
   - All the API endpoints are accessible with port 5000.
 - **OpenFeign**: Facilitates communication between microservices.

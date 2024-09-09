@@ -12,3 +12,9 @@ eureka:
     fetch-registry: false
     service-url:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+# adding zipkin
+management:
+  tracing:
+    sampling:
+      probability: 1.0

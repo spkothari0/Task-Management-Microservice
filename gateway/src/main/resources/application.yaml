@@ -64,3 +64,10 @@ logging:
           gateway: INFO
           route:
             RouteDefinitionLocator: INFO
+
+
+# adding zipkin
+management:
+  tracing:
+    sampling:
+      probability: 1.0

@@ -1,5 +1,6 @@
 package com.shreyas.filter.correlation;
 
+import com.shreyas.AppConstant;
 import org.slf4j.MDC;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
@@ -13,9 +14,9 @@ import java.io.IOException;
 public class CorrelationIdInterceptor implements ClientHttpRequestInterceptor {
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException{
-        String correlationId = MDC.get(CorrelationIdFilter.CORRELATION_ID_HEADER_NAME);
+        String correlationId = MDC.get(AppConstant.CORRELATION_ID);
         if(correlationId!=null){
-            request.getHeaders().add(CorrelationIdFilter.CORRELATION_ID_HEADER_NAME, correlationId);
+            request.getHeaders().add(AppConstant.CORRELATION_ID, correlationId);
         }
         return execution.execute(request, body);
     }

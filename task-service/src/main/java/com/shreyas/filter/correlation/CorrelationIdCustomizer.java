@@ -1,5 +1,6 @@
 package com.shreyas.filter.correlation;
 
+import com.shreyas.AppConstant;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.parameters.Parameter;
@@ -13,7 +14,7 @@ public class CorrelationIdCustomizer implements OperationCustomizer {
     public Operation customize(Operation operation, HandlerMethod handlerMethod){
         operation.addParametersItem(new Parameter()
                 .in("header")
-                .name(CorrelationIdFilter.CORRELATION_ID_HEADER_NAME)
+                .name(AppConstant.CORRELATION_ID)
                 .required(true)
                 .description("Correlation ID")
                 .schema(new StringSchema().format("uuid")));

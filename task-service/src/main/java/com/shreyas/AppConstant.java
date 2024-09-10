@@ -46,4 +46,8 @@ public class AppConstant {
     public String AWSS3BucketName() {
         return environment.getProperty("AWS_S3_BUCKET_NAME");
     }
+
+    public static final String CORRELATION_ID = "Correlation-Id";
+    public static final String Authorization_Header = "Authorization";
+    public static final String Bearer = "Bearer";
 }

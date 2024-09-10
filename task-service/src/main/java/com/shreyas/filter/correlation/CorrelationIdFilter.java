@@ -1,5 +1,6 @@
 package com.shreyas.filter.correlation;
 
+import com.shreyas.AppConstant;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,7 +16,6 @@ import java.util.regex.Pattern;
 @Component
 //@Order(1)
 public class CorrelationIdFilter implements Filter {
-    public static final String CORRELATION_ID_HEADER_NAME = "Correlation-Id";
 
     private static final List<String> EXCLUDED_PATHS = Arrays.asList(
             "/swagger-ui/.*",
@@ -45,17 +45,17 @@ public class CorrelationIdFilter implements Filter {
             filterChain.doFilter(request, response);
             return;
         }
-        String correlationId = httpServletRequest.getHeader(CORRELATION_ID_HEADER_NAME);
+        String correlationId = httpServletRequest.getHeader(AppConstant.CORRELATION_ID);
         if (correlationId == null || !isValidUUID(correlationId)) {
             throw new IllegalArgumentException("Correlation header is missing");
         }
 
-        MDC.put(CORRELATION_ID_HEADER_NAME, correlationId);
-        httpServletResponse.setHeader(CORRELATION_ID_HEADER_NAME, correlationId);
+        MDC.put(AppConstant.CORRELATION_ID, correlationId);
+        httpServletResponse.setHeader(AppConstant.CORRELATION_ID, correlationId);
         try{
             filterChain.doFilter(request,response);
         }finally {
-            MDC.remove(CORRELATION_ID_HEADER_NAME);
+            MDC.remove(AppConstant.CORRELATION_ID);
         }
     }
 

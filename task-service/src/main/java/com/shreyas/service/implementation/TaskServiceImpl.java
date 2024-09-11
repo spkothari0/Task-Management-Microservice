@@ -1,13 +1,16 @@
 package com.shreyas.service.implementation;
 
 import com.shreyas.Utility.GenericBeanMapper;
+import com.shreyas.bean.TaskAssignmentEvent;
 import com.shreyas.bean.TaskBean;
 import com.shreyas.entity.Task;
 import com.shreyas.entity.TaskStatus;
 import com.shreyas.repository.TaskRepo;
+import com.shreyas.service.interfaces.KafkaService;
 import com.shreyas.service.interfaces.TaskService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,11 +18,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class TaskServiceImpl implements TaskService {
-    @Autowired
-    private TaskRepo taskRepo;
-    @Autowired
-    private ModelMapper mapper;
+
+    private final TaskRepo taskRepo;
+    private final ModelMapper mapper;
+    private final KafkaService kafkaService;
 
     /**
      * @param task
@@ -116,11 +121,16 @@ public class TaskServiceImpl implements TaskService {
      * @throws Exception
      */
     @Override
-    public TaskBean assignTaskToUser(UUID userId, UUID taskId) throws Exception {
+    public TaskBean assignTaskToUser(UUID userId, UUID taskId, String token) throws Exception {
         Task t = getTask_ById(taskId);
         t.setAssignedUserId(userId);
         t.setStatus(TaskStatus.IN_PROGRESS.name());
         t = taskRepo.save(t);
+
+        TaskAssignmentEvent event = new TaskAssignmentEvent(taskId, userId);
+        // send task assignment to task
+        sendTaskAssignedEvent(event,token);
+
         return GenericBeanMapper.map(t, TaskBean.class, mapper);
     }
 
@@ -169,5 +179,14 @@ public class TaskServiceImpl implements TaskService {
             return t.get();
         else
             throw new RuntimeException("Task not found with id: " + taskId);
+    }
+
+    public void sendTaskAssignedEvent(TaskAssignmentEvent event, String token) {
+        try {
+            kafkaService.sendMessage(event,token);
+        }catch (Exception e) {
+            log.error("Error in kafka while sending task assignment event: {}", e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

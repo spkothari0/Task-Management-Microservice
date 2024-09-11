@@ -18,7 +18,7 @@ public interface TaskService {
 
     void deleteTask(UUID taskId) throws Exception;
 
-    TaskBean assignTaskToUser(UUID userId, UUID taskId) throws Exception;
+    TaskBean assignTaskToUser(UUID userId, UUID taskId, String token) throws Exception;
 
     List<TaskBean> assignedUserTasks(UUID userId, TaskStatus status) throws Exception;
 

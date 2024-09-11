@@ -78,8 +78,8 @@ public class TaskController extends BaseController {
 
     @PutMapping(value = "/{id}/user/{userid}/assigned")
     @Operation(summary = "Assign the task to the given user.")
-    public ResponseEntity<APIResponse<TaskBean>> assignTaskToUser(@PathVariable UUID id, @PathVariable UUID userid) throws Exception {
-        TaskBean result = taskService.assignTaskToUser(userid,id);
+    public ResponseEntity<APIResponse<TaskBean>> assignTaskToUser(@PathVariable UUID id, @PathVariable UUID userid, @RequestHeader("Authorization") String token) throws Exception {
+        TaskBean result = taskService.assignTaskToUser(userid,id,token);
         return SuccessResponse(result);
     }
 

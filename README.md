@@ -32,6 +32,9 @@ A comprehensive task management system was built using Spring Boot for the back 
   - Since we have added the eureka server in api gateway, we can access it directly from the api gateway endpoint: http://localhost:5000/eureka/web
   - <img width="960" alt="image" src="https://github.com/user-attachments/assets/ed9c5973-68b9-4307-a2b3-f3f51332c4ff">
 
+- **Kafka**: Kafka Service for real-time notification.
+  - Implemented Kafka for real-time notifications, where the Task Service produces messages whenever a task is assigned. The Notification Service consumes these messages to send timely email notifications to users, ensuring immediate and effective communication of task assignments
+
 - **Resilience4J implementation:**
   - Implemented Resilience4j to enhance fault tolerance in the application by incorporating `@CircuitBreakers` mechanisms for external service calls and additionally `@Retry` and `@TimeLimiter` can further be added for fine-grained control over fault tolerance.
   

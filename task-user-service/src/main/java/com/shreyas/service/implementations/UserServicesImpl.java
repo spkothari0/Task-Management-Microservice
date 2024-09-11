@@ -91,6 +91,14 @@ public class UserServicesImpl implements UserDetailsService, IUserServices {
         return GenericBeanMapper.mapList(users, UserBean.class, mapper);
     }
 
+    public UserBean getUserById(UUID id){
+        Optional<User> u = userRepo.findById(id);
+        if (u.isEmpty()) {
+            throw new UsernameNotFoundException("User with id: " + id + " not found!");
+        }
+        return GenericBeanMapper.map(u.get(), UserBean.class, mapper);
+    }
+
 //    public String verifyUser(String token) {
 //        Date currentTime = new Date();
 //        boolean isExpired = currentTime.after(jwtUtils.getExpirationDateFromToken(token));

@@ -16,6 +16,12 @@ A comprehensive task management system was built using Spring Boot for the back 
 
 ## Technologies Used
 
+### Overview:
+- Used industry-leading technologies such as **Spring Boot** for backend development, **Microservices** architecture for modular service management, **Kafka** for real-time   notifications, **Eureka Server** for service discovery, and **API Gateway** as the central entry point.
+- Additionally, integrated **OpenFeign** for inter-service communication, **Swagger** for API documentation, **JWT & Spring Security** for authentication and authorization, and **Redis Caching** for performance optimization.   
+- Frontend technologies include **React** for UI management, styled with **Tailwind CSS** and **Material-UI** for pre-built, customizable components. The system also 
+  employs **Zipkin** for distributed tracing, **Resilience4J** for fault tolerance, and **AWS S3** for file storage.
+
 ### Backend:
 - **Spring Boot**: The core framework for building the backend services.
 - **Microservices**:
@@ -30,17 +36,10 @@ A comprehensive task management system was built using Spring Boot for the back 
 
 - **Eureka Server**: Manages service discovery, ensuring all microservices are running and healthy, with load balancing support.
   - Since we have added the eureka server in api gateway, we can access it directly from the api gateway endpoint: http://localhost:5000/eureka/web
-  - <img width="960" alt="image" src="https://github.com/user-attachments/assets/ed9c5973-68b9-4307-a2b3-f3f51332c4ff">
+  - <img width="960" alt="image" src="<img width="937" alt="image" src="https://github.com/user-attachments/assets/ccb2b763-6746-4ab9-b785-1eb9c13e2bb4">
 
 - **Kafka**: Kafka Service for real-time notification.
   - Implemented Kafka for real-time notifications, where the Task Service produces messages whenever a task is assigned. The Notification Service consumes these messages to send timely email notifications to users, ensuring immediate and effective communication of task assignments
-
-- **Resilience4J implementation:**
-  - Implemented Resilience4j to enhance fault tolerance in the application by incorporating `@CircuitBreakers` mechanisms for external service calls and additionally `@Retry` and `@TimeLimiter` can further be added for fine-grained control over fault tolerance.
-  
-- **Zipkin**:
-  - Integrated Zipkin for distributed tracing, enabling real-time tracking of service requests and performance analysis across microservices, allowing for better monitoring, troubleshooting, and optimization of service interactions within the application
-  - <img width="960" src="./Images/zipkin.png" alt="Zipkin"/>
 
 - **API Gateway**: Serves as the entry point for all microservices.
   - All the API endpoints are accessible with port 5000.
@@ -60,6 +59,13 @@ A comprehensive task management system was built using Spring Boot for the back 
 - **AOP (Aspect-Oriented Programming)**: Logs method calls before and after execution of every method in Controller, Service and Repo layer for ease of logging and tracking the flow of control. 
 - **AWS S3**: Stores user profile images.
 - **Email Verification**: Validates user email addresses upon registration.
+
+- **Resilience4J implementation:**
+  - Implemented Resilience4j to enhance fault tolerance in the application by incorporating `@CircuitBreakers` mechanisms for external service calls and additionally `@Retry` and `@TimeLimiter` can further be added for fine-grained control over fault tolerance.
+  
+- **Zipkin**:
+  - Integrated Zipkin for distributed tracing, enabling real-time tracking of service requests and performance analysis across microservices, allowing for better monitoring, troubleshooting, and optimization of service interactions within the application
+  - <img width="960" src="./Images/zipkin.png" alt="Zipkin"/>
 
 ### Frontend:
 - **React**: Manages the state and UI of the application.
@@ -96,6 +102,8 @@ A comprehensive task management system was built using Spring Boot for the back 
 - npm or yarn
 - Redis
 - AWS account for S3
+- Kafka
+- Zipkins (docker)
 
 ### Installation
 

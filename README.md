@@ -2,6 +2,24 @@
 
 A comprehensive task management system was built using Spring Boot for the back end and React with Tailwind CSS and MUI for the front end. The system supports two types of users: **Admin** and **Employee/Helper**. 
 
+## Recruiter Quick Snapshot
+
+This project demonstrates end-to-end **SDE skills** across backend architecture, secure APIs, distributed systems, and modern frontend delivery.
+
+| Technology | Purpose in this Project | Skill Signal |
+|---|---|---|
+| Spring Boot + Java | Built production-style REST microservices (user, task, submission, notification). | Backend engineering, API design |
+| Microservices + Eureka + API Gateway | Service discovery and single entry point for routing/filtering across services. | Distributed system design |
+| Spring Security + JWT | Role-based authentication/authorization for Admin and Employee flows. | Secure API development |
+| Kafka | Event-driven notification flow when tasks are assigned. | Async messaging, scalable communication |
+| OpenFeign | Service-to-service communication with clean client abstractions. | Inter-service integration |
+| Redis Caching | API-level cache for faster reads and reduced backend load. | Performance optimization |
+| Resilience4J + Zipkin | Fault tolerance and distributed tracing for reliability/observability. | Production readiness, debugging |
+| React + Tailwind CSS + MUI | Responsive frontend for task workflows, filtering, and submissions. | Frontend engineering, UX delivery |
+| AWS S3 | Persistent storage for user profile images. | Cloud integration |
+
+> **Impact:** The stack reflects practical experience in building secure, scalable, and observable full-stack microservice applications suitable for real-world deployment.
+
 ## Project Overview
 
 ### Admin Features:
@@ -137,6 +155,5 @@ A comprehensive task management system was built using Spring Boot for the back 
 ### Usage
   - **Admin:**: Log in as an admin to manage tasks and view submissions
   - **Customer**: Log in as an employee to view assigned tasks and submit work
-
 
 

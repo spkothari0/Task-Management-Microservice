@@ -14,6 +14,8 @@ public interface TaskService {
 
     List<TaskBean> getAllTasks(TaskStatus status) throws Exception;
 
+    List<TaskBean> searchTasks(String query, TaskStatus status, UUID assignedUserId) throws Exception;
+
     TaskBean updateTask(UUID id, TaskBean task, UUID userId) throws Exception;
 
     void deleteTask(UUID taskId) throws Exception;

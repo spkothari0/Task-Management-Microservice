@@ -57,6 +57,15 @@ public class TaskController extends BaseController {
         return SuccessResponse(result);
     }
 
+    @GetMapping(value = "/search")
+    @Operation(summary = "Search tasks by query with optional status and assignee filters")
+    public ResponseEntity<APIResponse<List<TaskBean>>> searchTasks(@RequestParam(required = false) String q,
+                                                                   @RequestParam(required = false) TaskStatus status,
+                                                                   @RequestParam(required = false) UUID assignedUserId) throws Exception {
+        List<TaskBean> result = taskService.searchTasks(q, status, assignedUserId);
+        return SuccessResponse(result);
+    }
+
     @PutMapping(value = "/{id}")
     @Operation(summary = "Update the task for the authenticated user.")
     public ResponseEntity<APIResponse<TaskBean>> updateTask(@PathVariable UUID id, @RequestBody TaskBean task, @RequestHeader("Authorization") String token) throws Exception {

@@ -6,13 +6,22 @@ import com.shreyas.bean.TaskBean;
 import com.shreyas.entity.Task;
 import com.shreyas.entity.TaskStatus;
 import com.shreyas.repository.TaskRepo;
+import com.shreyas.search.document.TaskDocument;
+import com.shreyas.search.repository.TaskSearchRepository;
 import com.shreyas.service.interfaces.KafkaService;
 import com.shreyas.service.interfaces.TaskService;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.elasticsearch.client.elc.NativeQuery;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,6 +34,8 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepo taskRepo;
     private final ModelMapper mapper;
     private final KafkaService kafkaService;
+    private final TaskSearchRepository taskSearchRepository;
+    private final ElasticsearchOperations elasticsearchOperations;
 
     /**
      * @param task
@@ -46,6 +57,7 @@ public class TaskServiceImpl implements TaskService {
         newTask.setModifiedBy(author);
         newTask.setAssignedUserId(author);
         newTask = taskRepo.save(newTask);
+        indexTask(newTask);
         return GenericBeanMapper.map(newTask, TaskBean.class, mapper);
     }
 
@@ -67,9 +79,31 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public List<TaskBean> getAllTasks(TaskStatus status) throws Exception {
-        List<Task> tasks = taskRepo.findAll();
-        tasks = tasks.stream().filter(x -> status == null || x.getStatus().equalsIgnoreCase(status.name())).toList();
-        return GenericBeanMapper.mapList(tasks, TaskBean.class, mapper);
+        return searchTasks(null, status, null);
+    }
+
+    @Override
+    public List<TaskBean> searchTasks(String query, TaskStatus status, UUID assignedUserId) throws Exception {
+        try {
+            List<TaskDocument> documents = searchTaskDocuments(query, status, assignedUserId);
+            if (documents.isEmpty()) {
+                return Collections.emptyList();
+            }
+            List<Task> tasks = documents.stream()
+                    .map(doc -> taskRepo.findById(doc.getUuid()).orElse(null))
+                    .filter(task -> task != null)
+                    .toList();
+            return GenericBeanMapper.mapList(tasks, TaskBean.class, mapper);
+        } catch (Exception ex) {
+            log.warn("Elasticsearch unavailable. Falling back to database search. Cause: {}", ex.getMessage());
+            List<Task> tasks = taskRepo.findAll();
+            tasks = tasks.stream()
+                    .filter(task -> status == null || task.getStatus().equalsIgnoreCase(status.name()))
+                    .filter(task -> assignedUserId == null || task.getAssignedUserId().equals(assignedUserId))
+                    .filter(task -> query == null || query.isBlank() || containsSearchText(task, query))
+                    .toList();
+            return GenericBeanMapper.mapList(tasks, TaskBean.class, mapper);
+        }
     }
 
     /**
@@ -101,6 +135,7 @@ public class TaskServiceImpl implements TaskService {
             t.setStatus(task.getStatus().name());
 
         t = taskRepo.save(t);
+        indexTask(t);
         return GenericBeanMapper.map(t, TaskBean.class, mapper);
     }
 
@@ -112,6 +147,7 @@ public class TaskServiceImpl implements TaskService {
     public void deleteTask(UUID taskId) throws Exception {
         getTask_ById(taskId);
         taskRepo.deleteById(taskId);
+        deleteIndexedTask(taskId);
     }
 
     /**
@@ -126,6 +162,7 @@ public class TaskServiceImpl implements TaskService {
         t.setAssignedUserId(userId);
         t.setStatus(TaskStatus.IN_PROGRESS.name());
         t = taskRepo.save(t);
+        indexTask(t);
 
         TaskAssignmentEvent event = new TaskAssignmentEvent(taskId, userId);
         // send task assignment to task
@@ -142,9 +179,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public List<TaskBean> assignedUserTasks(UUID userId, TaskStatus status) throws Exception {
-        List<Task> taskList = taskRepo.findByAssignedUserId(userId);
-        taskList = taskList.stream().filter(x -> status == null || x.getStatus().equalsIgnoreCase(status.name())).toList();
-        return GenericBeanMapper.mapList(taskList, TaskBean.class, mapper);
+        return searchTasks(null, status, userId);
     }
 
     /**
@@ -157,6 +192,7 @@ public class TaskServiceImpl implements TaskService {
         t.setStatus(TaskStatus.COMPLETED.name());
         t.setModifiedBy(t.getAssignedUserId());
         t = taskRepo.save(t);
+        indexTask(t);
         return GenericBeanMapper.map(t, TaskBean.class, mapper);
     }
 
@@ -170,7 +206,58 @@ public class TaskServiceImpl implements TaskService {
         t.setStatus(TaskStatus.CANCELLED.name());
         t.setModifiedBy(t.getAssignedUserId());
         t = taskRepo.save(t);
+        indexTask(t);
         return GenericBeanMapper.map(t, TaskBean.class, mapper);
+    }
+
+    private List<TaskDocument> searchTaskDocuments(String query, TaskStatus status, UUID assignedUserId) {
+        BoolQuery.Builder boolQuery = new BoolQuery.Builder();
+
+        if (query != null && !query.isBlank()) {
+            boolQuery.must(m -> m.multiMatch(mm -> mm
+                    .query(query)
+                    .fields("title", "description", "tags")));
+        }
+
+        if (status != null) {
+            boolQuery.filter(f -> f.term(t -> t.field("status").value(status.name())));
+        }
+
+        if (assignedUserId != null) {
+            boolQuery.filter(f -> f.term(t -> t.field("assignedUserId").value(assignedUserId.toString())));
+        }
+
+        Query finalQuery = Query.of(q -> q.bool(boolQuery.build()));
+        NativeQuery searchQuery = NativeQuery.builder().withQuery(finalQuery).build();
+        SearchHits<TaskDocument> hits = elasticsearchOperations.search(searchQuery, TaskDocument.class);
+
+        return hits.getSearchHits().stream()
+                .map(hit -> hit.getContent())
+                .toList();
+    }
+
+    private boolean containsSearchText(Task task, String query) {
+        String normalized = query.toLowerCase();
+        boolean inTitle = task.getTitle() != null && task.getTitle().toLowerCase().contains(normalized);
+        boolean inDescription = task.getDescription() != null && task.getDescription().toLowerCase().contains(normalized);
+        boolean inTags = task.getTags() != null && task.getTags().stream().anyMatch(tag -> tag != null && tag.toLowerCase().contains(normalized));
+        return inTitle || inDescription || inTags;
+    }
+
+    private void indexTask(Task task) {
+        try {
+            taskSearchRepository.save(TaskDocument.fromTask(task));
+        } catch (Exception ex) {
+            log.warn("Failed to index task {} in Elasticsearch: {}", task.getId(), ex.getMessage());
+        }
+    }
+
+    private void deleteIndexedTask(UUID taskId) {
+        try {
+            taskSearchRepository.deleteById(taskId.toString());
+        } catch (Exception ex) {
+            log.warn("Failed to remove task {} from Elasticsearch index: {}", taskId, ex.getMessage());
+        }
     }
 
     private Task getTask_ById(UUID taskId) throws Exception {
